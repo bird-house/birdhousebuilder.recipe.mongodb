@@ -46,8 +46,9 @@ setup(name='birdhousebuilder.recipe.mongodb',
       include_package_data=True,
       zip_safe=False,
       install_requires=['setuptools',
-                        'zc.buildout'
+                        'zc.buildout',
                         # -*- Extra requirements: -*-
+			'birdhousebuilder.recipe.conda',
                         ],
       tests_require=tests_require,
       extras_require=dict(tests=tests_require),

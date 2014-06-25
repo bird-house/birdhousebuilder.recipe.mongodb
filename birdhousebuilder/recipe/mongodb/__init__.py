@@ -3,22 +3,60 @@
 
 """Recipe mongodb"""
 
-       
+import os
+from mako.template import Template
+
+import zc.buildout
+from birdhousebuilder.recipe import conda, supervisor
+
+templ_config = Template(filename=os.path.join(os.path.dirname(__file__), "mongodb.conf"))
+
 class Recipe(object):
     """This recipe is used by zc.buildout"""
 
     def __init__(self, buildout, name, options):
         self.buildout, self.name, self.options = buildout, name, options
         b_options = buildout['buildout']
-        self.anaconda_home = b_options.get('anaconda-home', anaconda_home)
+        self.anaconda_home = b_options.get('anaconda-home', conda.anaconda_home)
         self.conda_channels = b_options.get('conda-channels')
 
     def install(self):
+        installed = []
+        installed += list(self.install_mongodb())
+        installed += list(self.install_config())
+        return installed
+
+    def install_mongodb(self):
+        script = conda.Recipe(
+            self.buildout,
+            self.name,
+            {'pkgs': 'mongodb'})
+
+        conda.makedirs( os.path.join(self.anaconda_home, 'etc') )
+        conda.makedirs( os.path.join(self.anaconda_home, 'var', 'lib', 'mongodb') )
+        conda.makedirs( os.path.join(self.anaconda_home, 'var', 'log', 'mongodb') )
+        
+        return script.install()
+        
+    def install_config(self):
         """
-        install conda packages
+        install mongodb config file
         """
-        pkgs = self.options.get('pkgs', '')
-        return install_pkgs(self.anaconda_home, pkgs, self.conda_channels) 
+        result = templ_config.render(
+            prefix=self.anaconda_home,
+            )
+
+        output = os.path.join(self.anaconda_home, 'etc', 'mongodb.conf')
+        conda.makedirs(os.path.dirname(output))
+        
+        try:
+            os.remove(output)
+        except OSError:
+            pass
+
+        with open(output, 'wt') as fp:
+            fp.write(result)
+        return [output]
 
     def update(self):
         return self.install()
