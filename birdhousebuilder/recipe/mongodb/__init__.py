@@ -24,6 +24,7 @@ class Recipe(object):
         installed = []
         installed += list(self.install_mongodb())
         installed += list(self.install_config())
+        installed += list(self.install_program())
         return installed
 
     def install_mongodb(self):
@@ -57,6 +58,16 @@ class Recipe(object):
         with open(output, 'wt') as fp:
             fp.write(result)
         return [output]
+
+    def install_program(self):
+        script = supervisor.Recipe(
+            self.buildout,
+            self.name,
+            {'program': 'mongodb',
+             'command': '%s/bin/mongod --config %s/etc/mongodb.conf' % (self.anaconda_home, self.anaconda_home),
+             'priority': '10',
+             })
+        return script.install()
 
     def update(self):
         return self.install()
