@@ -49,6 +49,8 @@ setup(name='birdhousebuilder.recipe.mongodb',
                         'zc.buildout',
                         # -*- Extra requirements: -*-
 			'birdhousebuilder.recipe.conda',
+			'birdhousebuilder.recipe.supervisor',
+			'mako',
                         ],
       tests_require=tests_require,
       extras_require=dict(tests=tests_require),
