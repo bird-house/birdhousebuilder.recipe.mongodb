@@ -66,6 +66,8 @@ class Recipe(object):
             {'program': 'mongodb',
              'command': '%s/bin/mongod --config %s/etc/mongodb.conf' % (self.anaconda_home, self.anaconda_home),
              'priority': '10',
+	     'autostart': 'true',
+	     'autorestart': 'false',
              })
         return script.install()
 
