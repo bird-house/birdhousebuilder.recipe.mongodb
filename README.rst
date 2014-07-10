@@ -1,6 +1,6 @@
-*****************************
-birdhousebuilder.recipe.conda
-*****************************
+*******************************
+birdhousebuilder.recipe.mongodb
+*******************************
 
 .. contents::
 
