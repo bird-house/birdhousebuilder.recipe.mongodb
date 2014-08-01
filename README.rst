@@ -19,7 +19,7 @@ Usage
 
 The recipe requires that Anaconda is already installed. It assumes that Anaconda is installed at the default location in your home directory ``~/anaconda``. Otherwise you need to set the Buildout option ``anaconda-home`` to the correct location.
 
-It installs the ``mongodb`` package from a conda channel and setups a `MongoDB`_ database in ``~/anaconda/var/lib/mongodb``. It deploys a `Supervisor`_ configuration for MongoDB in ``~/anaconda/etc/supervisor/conf.d/mongodb.conf``. MongoDB can be started with ``~/anaconda/etc/init.d/mongodb start``.
+It installs the ``mongodb`` package from a conda channel and setups a `MongoDB`_ database in ``~/anaconda/var/lib/mongodb``. It deploys a `Supervisor`_ configuration for MongoDB in ``~/anaconda/etc/supervisor/conf.d/mongodb.conf``. Supervisor can be started with ``~/anaconda/etc/init.d/supervisor start``.
 
 The recipe depends on ``birdhousebuilder.recipe.conda`` and ``birdhousebuilder.recipe.supervisor``.
 
