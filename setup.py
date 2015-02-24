@@ -5,7 +5,7 @@ This module contains the tool of collective.recipe.cmd
 from setuptools import find_packages
 from setuptools import setup
 
-version = '0.1.1'
+version = '0.2.0'
 description = 'A Buildout recipe to install and setup mongodb with Anaconda.'
 long_description = (
     open('README.rst').read() + '\n' +
@@ -36,9 +36,8 @@ setup(name='birdhousebuilder.recipe.mongodb',
           'Topic :: Software Development :: Libraries :: Python Modules',
           'License :: OSI Approved :: BSD License',
       ],
-      keywords='buildout recipe',
-      author='Carsten Ehbrecht',
-      author_email='ehbrecht at dkrz.de',
+      keywords='buildout recipe birdhouse mongodb anaconda',
+      author='Birdhouse',
       url='https://github.com/bird-house/birdhousebuilder.recipe.mongodb',
       license='BSD',
       packages=find_packages(exclude=['ez_setup']),
