@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# Copyright (C)2015 DKRZ GmbH
 
 """Recipe mongodb"""
 
@@ -20,6 +19,7 @@ class Recipe(object):
         b_options = buildout['buildout']
         self.prefix = self.options.get('prefix', conda.prefix())
         self.options['prefix'] = self.prefix
+        self.options['user'] = self.options.get('user', '')
         
         self.conda_channels = b_options.get('conda-channels')
 
@@ -66,11 +66,12 @@ class Recipe(object):
         script = supervisor.Recipe(
             self.buildout,
             self.name,
-            {'program': 'mongodb',
+            {'user': self.options.get('user'),
+             'program': 'mongodb',
              'command': '%s/bin/mongod --config %s/etc/mongodb.conf' % (self.prefix, self.prefix),
              'priority': '10',
-         'autostart': 'true',
-         'autorestart': 'false',
+             'autostart': 'true',
+             'autorestart': 'false',
              })
         return script.install()
 
