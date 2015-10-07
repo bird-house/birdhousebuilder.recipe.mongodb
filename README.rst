@@ -45,6 +45,12 @@ The recipe supports the following options:
    2. ``$ANACONDA_HOME``
    3. ``$HOME/anaconda``
 
+``bind_ip``
+  The IP address that mongodb binds to in order to listen for connections from applications. Default: 127.0.0.1
+
+``port``
+  The TCP port on which the MongoDB instance listens for client connections. Default: 27017
+
 
 Example usage
 =============
@@ -58,5 +64,5 @@ The following example ``buildout.cfg`` installs MongoDB with Anaconda::
 
   [myapp_mongodb]
   recipe = birdhousebuilder.recipe.mongodb
-
+  port = 27020
 

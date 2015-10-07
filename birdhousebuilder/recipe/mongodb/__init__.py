@@ -20,6 +20,9 @@ class Recipe(object):
         self.prefix = self.options.get('prefix', conda.prefix())
         self.options['prefix'] = self.prefix
         self.options['user'] = self.options.get('user', '')
+        self.options['bind_ip'] = self.options.get('bind_ip', '127.0.0.1')
+        self.options['port'] = self.options.get('port', '27017')
+        #self.options['logstdout'] = conda.as_bool(self.options.get('logstdout', 'true'))
         
         self.conda_channels = b_options.get('conda-channels')
 
@@ -38,7 +41,7 @@ class Recipe(object):
 
         conda.makedirs( os.path.join(self.prefix, 'etc') )
         conda.makedirs( os.path.join(self.prefix, 'var', 'lib', 'mongodb') )
-        conda.makedirs( os.path.join(self.prefix, 'var', 'log', 'mongodb') )
+        #conda.makedirs( os.path.join(self.prefix, 'var', 'log', 'mongodb') )
         
         return script.install()
         
@@ -48,6 +51,8 @@ class Recipe(object):
         """
         result = templ_config.render(
             prefix=self.prefix,
+            bind_ip=self.options['bind_ip'],
+            port=self.options['port'],
             )
 
         output = os.path.join(self.prefix, 'etc', 'mongodb.conf')
