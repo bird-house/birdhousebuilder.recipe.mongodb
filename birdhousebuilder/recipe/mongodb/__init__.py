@@ -7,8 +7,14 @@ from mako.template import Template
 
 import zc.buildout
 from birdhousebuilder.recipe import conda, supervisor
+from birdhousebuilder.recipe.conda import conda_env_path
+
+import logging
+logging.basicConfig(format='%(message)s', level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 templ_config = Template(filename=os.path.join(os.path.dirname(__file__), "mongodb.conf"))
+templ_cmd = Template('${env_path}/bin/mongod --config ${prefix}/etc/mongodb.conf') 
 
 class Recipe(object):
     """This recipe is used by zc.buildout.
@@ -19,6 +25,10 @@ class Recipe(object):
         b_options = buildout['buildout']
         self.prefix = self.options.get('prefix', conda.prefix())
         self.options['prefix'] = self.prefix
+
+	self.env_path = conda_env_path(buildout, options)
+        self.options['env_path'] = self.env_path
+
         self.options['user'] = self.options.get('user', '')
         self.options['bind_ip'] = self.options.get('bind_ip', '127.0.0.1')
         self.options['port'] = self.options.get('port', '27017')
@@ -73,7 +83,7 @@ class Recipe(object):
             self.name,
             {'user': self.options.get('user'),
              'program': 'mongodb',
-             'command': '%s/bin/mongod --config %s/etc/mongodb.conf' % (self.prefix, self.prefix),
+             'command': templ_cmd.render(**self.options),
              'priority': '10',
              'autostart': 'true',
              'autorestart': 'false',
