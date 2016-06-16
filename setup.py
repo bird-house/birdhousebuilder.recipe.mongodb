@@ -5,7 +5,7 @@ This module contains the tool of collective.recipe.cmd
 from setuptools import find_packages
 from setuptools import setup
 
-version = '0.2.2'
+version = '0.3.0'
 description = 'A Buildout recipe to install and setup mongodb with Anaconda.'
 long_description = (
     open('README.rst').read() + '\n' +
