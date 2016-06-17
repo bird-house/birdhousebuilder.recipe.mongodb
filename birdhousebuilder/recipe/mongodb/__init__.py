@@ -9,10 +9,6 @@ import zc.buildout
 from birdhousebuilder.recipe import conda, supervisor
 from birdhousebuilder.recipe.conda import conda_env_path
 
-import logging
-logging.basicConfig(format='%(message)s', level=logging.INFO)
-logger = logging.getLogger(__name__)
-
 templ_config = Template(filename=os.path.join(os.path.dirname(__file__), "mongodb.conf"))
 templ_cmd = Template('${env_path}/bin/mongod --config ${prefix}/etc/mongodb.conf') 
 
@@ -23,10 +19,11 @@ class Recipe(object):
     def __init__(self, buildout, name, options):
         self.buildout, self.name, self.options = buildout, name, options
         b_options = buildout['buildout']
-        self.prefix = self.options.get('prefix', conda.prefix())
+
+        self.prefix = b_options.get('birdhouse-home', '/opt/birdhouse')
         self.options['prefix'] = self.prefix
 
-	self.env_path = conda_env_path(buildout, options)
+        self.env_path = conda_env_path(buildout, options)
         self.options['env_path'] = self.env_path
 
         self.options['user'] = self.options.get('user', '')
