@@ -10,7 +10,7 @@ from birdhousebuilder.recipe import conda, supervisor
 from birdhousebuilder.recipe.conda import conda_env_path
 
 templ_config = Template(filename=os.path.join(os.path.dirname(__file__), "mongodb.conf"))
-templ_cmd = Template('${env_path}/bin/mongod --config ${prefix}/etc/mongodb.conf') 
+templ_cmd = Template('${env_path}/bin/mongod --config ${etc_prefix}/mongodb.conf') 
 
 class Recipe(object):
     """This recipe is used by zc.buildout.
@@ -20,8 +20,16 @@ class Recipe(object):
         self.buildout, self.name, self.options = buildout, name, options
         b_options = buildout['buildout']
 
-        self.prefix = b_options.get('birdhouse-home', '/opt/birdhouse')
-        self.options['prefix'] = self.prefix
+        deployment = self.deployment = options.get('deployment')
+        if deployment:
+            self.options['prefix'] = buildout[deployment].get('prefix')
+            self.options['etc_prefix'] = buildout[deployment].get('etc-prefix')
+            self.options['var_prefix'] = buildout[deployment].get('var-prefix')
+        else:
+            self.options['prefix'] = os.path.join(buildout['buildout']['parts-directory'], self.name)
+            self.options['etc_prefix'] = os.path.join(self.options['prefix'], 'etc')
+            self.options['var_prefix'] = os.path.join(self.options['prefix'], 'var')
+        self.prefix = self.options['prefix']
 
         self.env_path = conda_env_path(buildout, options)
         self.options['env_path'] = self.env_path
@@ -46,8 +54,7 @@ class Recipe(object):
             self.name,
             {'pkgs': 'mongodb'})
 
-        conda.makedirs( os.path.join(self.prefix, 'etc') )
-        conda.makedirs( os.path.join(self.prefix, 'var', 'lib', 'mongodb') )
+        conda.makedirs( os.path.join(self.options['var_prefix'], 'lib', 'mongodb') )
         #conda.makedirs( os.path.join(self.prefix, 'var', 'log', 'mongodb') )
         
         return script.install()
@@ -56,13 +63,9 @@ class Recipe(object):
         """
         install mongodb config file
         """
-        result = templ_config.render(
-            prefix=self.prefix,
-            bind_ip=self.options['bind_ip'],
-            port=self.options['port'],
-            )
-
-        output = os.path.join(self.prefix, 'etc', 'mongodb.conf')
+        result = templ_config.render(**self.options)
+    
+        output = os.path.join(self.options['etc_prefix'], 'mongodb.conf')
         conda.makedirs(os.path.dirname(output))
         
         try:
@@ -79,6 +82,7 @@ class Recipe(object):
             self.buildout,
             self.name,
             {'user': self.options.get('user'),
+             'deployment': self.deployment,
              'program': 'mongodb',
              'command': templ_cmd.render(**self.options),
              'priority': '10',
