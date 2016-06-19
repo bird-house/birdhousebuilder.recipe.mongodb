@@ -1,6 +1,12 @@
 Changes
 *******
 
+0.3.0 (2016-06-19)
+==================
+
+* using zc.recipe.deployment.
+* seperate conda env from install-prefix.
+
 0.2.2 (2015-10-07)
 ==================
 
