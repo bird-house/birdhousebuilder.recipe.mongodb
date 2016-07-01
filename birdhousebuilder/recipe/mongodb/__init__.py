@@ -37,7 +37,7 @@ class Recipe(object):
             
         self.deployment_name = self.name + "-mongodb-deployment"
         self.deployment = zc.recipe.deployment.Install(buildout, self.deployment_name, {
-            'name': "supervisor",
+            'name': "mongodb",
             'prefix': self.options.get('prefix'),
             'user': self.options.get('user'),
             'etc-user': self.options.get('etc-user')})
@@ -48,6 +48,7 @@ class Recipe(object):
         self.options['etc-prefix'] = self.options['etc_prefix'] = self.deployment.options['etc-prefix']
         self.options['var-prefix'] = self.options['var_prefix'] = self.deployment.options['var-prefix']
         self.options['etc-directory'] = self.options['etc_directory'] = self.deployment.options['etc-directory']
+        self.options['lib-directory'] = self.options['lib_directory'] = self.deployment.options['lib-directory']
         self.options['log-directory'] = self.options['log_directory'] = self.deployment.options['log-directory']
         self.options['run-directory'] = self.options['run_directory'] = self.deployment.options['run-directory']
         self.options['cache-directory'] = self.options['cache_directory'] = self.deployment.options['cache-directory']
