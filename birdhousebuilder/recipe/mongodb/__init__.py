@@ -13,7 +13,8 @@ import birdhousebuilder.recipe.supervisor
 import birdhousebuilder.recipe.conda
 
 templ_config = Template(filename=os.path.join(os.path.dirname(__file__), "mongodb.conf"))
-templ_cmd = Template('${conda_prefix}/bin/mongod --config ${etc_directory}/mongodb.conf') 
+templ_cmd = Template('${conda_prefix}/bin/mongod --config ${etc_directory}/mongodb.conf')
+
 
 class Recipe(object):
     """This recipe is used by zc.buildout.
@@ -25,7 +26,7 @@ class Recipe(object):
 
         self.name = options.get('name', name)
         self.options['name'] = self.name
-        
+
         self.logger = logging.getLogger(self.name)
 
         # deployment layout
@@ -33,8 +34,8 @@ class Recipe(object):
             if section_name in buildout._raw:
                 raise KeyError("already in buildout", section_name)
             buildout._raw[section_name] = options
-            buildout[section_name] # cause it to be added to the working parts
-            
+            buildout[section_name]  # cause it to be added to the working parts
+
         self.deployment_name = self.name + "-mongodb-deployment"
         self.deployment = zc.recipe.deployment.Install(buildout, self.deployment_name, {
             'name': "mongodb",
@@ -59,7 +60,7 @@ class Recipe(object):
         self.options['env'] = self.options.get('env', '')
         self.options['pkgs'] = self.options.get('pkgs', 'mongodb')
         self.options['channels'] = self.options.get('channels', 'defaults')
-        
+
         self.conda = birdhousebuilder.recipe.conda.Recipe(self.buildout, self.name, {
             #'prefix': self.options.get('conda-prefix', ''),
             'env': self.options['env'],
@@ -70,7 +71,6 @@ class Recipe(object):
         # mongodb options
         self.options['bind-ip'] = self.options['bind_ip'] = self.options.get('bind-ip', '127.0.0.1')
         self.options['port'] = self.options.get('port', '27017')
-        
 
     def install(self, update=False):
         installed = []
@@ -109,6 +109,6 @@ class Recipe(object):
     def update(self):
         return self.install(update=True)
 
+
 def uninstall(name, options):
     pass
-
