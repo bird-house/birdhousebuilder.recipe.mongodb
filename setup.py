@@ -7,7 +7,7 @@ from setuptools import setup
 
 name = 'birdhousebuilder.recipe.mongodb'
 
-version = '0.3.0'
+version = '0.4.0'
 description = 'A Buildout recipe to install and setup mongodb with Anaconda.'
 long_description = (
     open('README.rst').read() + '\n' +
