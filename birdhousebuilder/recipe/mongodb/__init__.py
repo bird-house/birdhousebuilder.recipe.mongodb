@@ -12,8 +12,8 @@ from zc.recipe.deployment import Configuration
 import birdhousebuilder.recipe.supervisor
 import birdhousebuilder.recipe.conda
 
-templ_config = Template(filename=os.path.join(os.path.dirname(__file__), "mongodb.conf"))
-templ_cmd = Template('${conda_prefix}/bin/mongod --config ${etc_directory}/mongodb.conf')
+templ_config = Template(filename=os.path.join(os.path.dirname(__file__), "mongod.conf"))
+templ_cmd = Template('${conda_prefix}/bin/mongod --config ${etc_directory}/mongod.conf')
 
 
 class Recipe(object):
@@ -86,7 +86,7 @@ class Recipe(object):
         install mongodb config file
         """
         text = templ_config.render(**self.options)
-        config = Configuration(self.buildout, 'mongodb.conf', {
+        config = Configuration(self.buildout, 'mongod.conf', {
             'deployment': self.deployment_name,
             'text': text})
         return [config.install()]
